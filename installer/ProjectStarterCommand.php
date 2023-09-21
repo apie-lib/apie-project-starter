@@ -95,14 +95,15 @@ class ProjectStarterCommand extends Command
         $output->writeln('Apie CMS: ' . ($cms ? 'yes' : 'no'));
         $output->writeln("Framework: $framework");
         $output->writeln("Default user object: " . ($userObject ? 'yes' : 'no'));
+        $projectConfig = new ProjectStarterConfig($setup, $framework, $cms, $userObject);
 
-        $frameworkSetup = $this->getFrameworkSetup($framework, $setup, $cms);
+        $frameworkSetup = $this->getFrameworkSetup($projectConfig);
         $composerJson['require']['apie/meta-' . $setup] = self::APIE_VERSION_TO_INSTALL;
-        $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $setup, $cms);
+        $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $projectConfig);
 
         $output->writeln(json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         file_put_contents(Factory::getComposerFile(), json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        $frameworkSetup->writeFiles(dirname(Factory::getComposerFile()), $cms);
+        $frameworkSetup->writeFiles(dirname(Factory::getComposerFile()), $projectConfig);
         $this->cleanStarterCode();
 
         return Command::SUCCESS;
@@ -117,9 +118,9 @@ class ProjectStarterCommand extends Command
 
     }
 
-    private function getFrameworkSetup(string $framework, string $setup, bool $cms): FrameworkSetupInterface
+    private function getFrameworkSetup(ProjectStarterConfig $config): FrameworkSetupInterface
     {
-        if ($framework === 'Symfony') {
+        if ($config->framework === 'Symfony') {
             return new SymfonySetup();
         }
 

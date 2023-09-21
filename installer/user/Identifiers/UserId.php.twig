@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Apie\Example\Identifiers;
+
+use Apie\CommonValueObjects\Email;
+use Apie\Core\Identifiers\IdentifierInterface;
+use App\Apie\Example\Resources\User;
+use ReflectionClass;
+
+class UserId extends Email implements IdentifierInterface
+{
+    public static function getReferenceFor(): ReflectionClass
+    {
+        return new ReflectionClass(User::class);
+    }
+}

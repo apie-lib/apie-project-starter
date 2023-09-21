@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Apie\Example\Actions;
+
+use Apie\Common\ApieFacade;
+use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Exceptions\EntityNotFoundException;
+use App\Apie\Example\Identifiers\UserId;
+use App\Apie\Example\Resources\User;
+
+class Authentication
+{
+    public function __construct(private readonly ApieFacade $apie)
+    {
+    }
+
+    public function verifyAuthentication(UserId $username, string $password): ?User
+    {
+        try {
+            $user = $this->apie->find($username, new BoundedContextId('example'));
+        } catch (EntityNotFoundException) {
+            return null;
+        }
+        if ($user instanceof User) {
+            return $user->verifyPassword($password) ? $user : null;
+        }
+
+        return $user;
+    }
+}

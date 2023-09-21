@@ -3,6 +3,7 @@
 namespace Apie\ApieProjectStarter\Frameworks;
 
 use Apie\ApieProjectStarter\ProjectStarterCommand;
+use Apie\ApieProjectStarter\ProjectStarterConfig;
 use Apie\ApieProjectStarter\Render\TwigRender;
 
 class SymfonySetup implements FrameworkSetupInterface
@@ -34,7 +35,7 @@ class SymfonySetup implements FrameworkSetupInterface
         "symfony/web-profiler-bundle" => "6.*"
     ];
 
-    public function modifyComposerFileContents(array $composerJson, string $setup, bool $cms): array
+    public function modifyComposerFileContents(array $composerJson, ProjectStarterConfig $projectStarterConfig): array
     {
         foreach (self::REQUIREMENTS as $package => $versionConstraint) {
             $composerJson['require'][$package] = $versionConstraint;
@@ -42,12 +43,12 @@ class SymfonySetup implements FrameworkSetupInterface
         foreach (self::DEV_REQUIREMENTS as $package => $versionConstraint) {
             $composerJson['require-dev'][$package] = $versionConstraint;
         }
-        if ($setup !== 'minimal') {
+        if ($projectStarterConfig->setup !== 'minimal') {
             foreach (self::RECOMMENDED_REQUIREMENTS as $package => $versionConstraint) {
                 $composerJson['require'][$package] = $versionConstraint;
             }
         }
-        if ($cms) {
+        if ($projectStarterConfig->includeCms) {
             foreach (self::CMS_REQUIREMENTS as $package => $versionConstraint) {
                 $composerJson['require'][$package] = $versionConstraint;
             }
@@ -62,9 +63,10 @@ class SymfonySetup implements FrameworkSetupInterface
         return $composerJson;
     }
 
-    public function writeFiles(string $targetPath, bool $cms): void
+    public function writeFiles(string $targetPath, ProjectStarterConfig $projectStarterConfig): void
     {
         $cachePath = $targetPath . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'setup';
+        $examplePath = $targetPath . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Apie' . DIRECTORY_SEPARATOR . 'Example';
         $render = new TwigRender(
             __DIR__ . '/../symfony',
             $cachePath
@@ -74,14 +76,21 @@ class SymfonySetup implements FrameworkSetupInterface
             __DIR__ . '/../example',
             $cachePath
         );
-        $render->renderAll($targetPath . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Apie' . DIRECTORY_SEPARATOR . 'Example');
+        $render->renderAll($examplePath);
         chmod($targetPath . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'console', 0744);
-        if ($cms) {
+        if ($projectStarterConfig->includeCms) {
             $render = new TwigRender(
                 __DIR__ . '/../symfony-cms',
                 $cachePath
             );
             $render->renderAll($targetPath);
+        }
+        if ($projectStarterConfig->includeUser) {
+            $render = new TwigRender(
+                __DIR__ . '/../user',
+                $cachePath
+            );
+            $render->renderAll($examplePath);
         }
         system('rm -rf ' . escapeshellarg($targetPath . '/var/cache/setup'));
     }
