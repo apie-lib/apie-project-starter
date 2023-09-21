@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Apie\Example\Resources;
+
+use App\Apie\Example\Identifiers\ExampleId;
+use Apie\Core\Entities\EntityInterface;
+
+class Example implements EntityInterface
+{
+    private ExampleId $id;
+
+    public function __construct(private string $requiredString)
+    {
+        $this->id = ExampleId::createRandom();
+    }
+    public function getId(): ExampleId
+    {
+        return $this->id;
+    }
+
+    public function getRequiredString(): string
+    {
+        return $this->requiredString;
+    }
+}

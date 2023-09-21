@@ -1,0 +1,17 @@
+apie:
+  cms:
+    dashboard_template: 'apie/dashboard.html.twig'
+  doctrine:
+    # build_once: true
+    connection_params:
+      driver: pdo_sqlite
+      path: "%kernel.project_dir%/db.sqlite"
+  datalayers:
+    #default_datalayer: 'App\Apie\InMemoryDataLayer'
+    default_datalayer: 'Apie\DoctrineEntityDatalayer\DoctrineEntityDatalayer'
+  bounded_contexts:
+    example:
+      entities_folder: "%kernel.project_dir%/src/Apie/Example/Resources/"
+      entities_namespace: 'App\Apie\Example\Resources'
+      actions_folder: "%kernel.project_dir%/src/Apie/Example/Actions/"
+      actions_namespace: 'App\Apie\Example\Actions'

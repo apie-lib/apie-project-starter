@@ -1,0 +1,20 @@
+<p>This is the Apie example app. The only application code can be found in src and contains just domain objects.
+The rest is just done with apie/rest-api and apie/cms.</p>
+
+<p>
+You are now viewing the CMS dashboard, but you can also see the <a href="{{ '{{' }} url('apie.example.swagger_ui') }}">Rest API generated Swagger UI page.</a>
+</p>
+
+<p>
+  How to continue?
+  <ul>
+    <li>Set up database if you have a MYSQL database.
+      <ul>
+        <li>Open config/apie.yaml in a text editor</li>
+        <li>Change the database DSN to add username, password host and database name</li>
+        <li>You can run the doctrine commands to verify the connection: <pre>bin/console doctrine:schema:update --em=apie_manager</pre></li>
+      </ul>
+    </li>
+    <li>Adding console commands? Do <pre>composer require apie/console:{{ apieVersion }}</pre> to get console commands to create resources.</li>
+  </ul>
+</p>

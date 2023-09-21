@@ -1,0 +1,11 @@
+{
+  "package": {
+    "name": "apie/apie-project-starter",
+    "version": "1.0.0",
+    "source": {
+      "url": "./.git",
+      "type": "git",
+      "reference": "main"
+    }
+  }
+}

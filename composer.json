@@ -1,0 +1,23 @@
+{
+    "name": "apie/apie-project-starter",
+    "description": "create an apie project",
+    "type": "library",
+    "require": {
+        "composer/composer": "2.*",
+        "symfony/console": "6.*",
+        "symfony/finder": "6.*",
+        "twig/twig": "^3.7.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Apie\\ApieProjectStarter\\": "installer/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@php bin/start-project start-project",
+            "@composer update"
+        ]
+    }
+}
