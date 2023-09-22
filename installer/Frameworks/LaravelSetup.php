@@ -20,8 +20,9 @@ class LaravelSetup implements FrameworkSetupInterface
     {
         $render = new TwigRender(
             __DIR__ . '/../laravel',
-            $targetPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'setup'
+            $targetPath . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'setup'
         );
         $render->renderAll($targetPath);
+        chmod($targetPath . DIRECTORY_SEPARATOR . 'artisan', 0744);
     }
 }
