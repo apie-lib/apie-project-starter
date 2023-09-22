@@ -4,6 +4,7 @@
     "type": "library",
     "require": {
         "composer/composer": "2.*",
+        "czproject/git-php": "^4.2",
         "symfony/console": "6.*",
         "symfony/finder": "6.*",
         "twig/twig": "^3.7.1"
@@ -19,5 +20,7 @@
             "@php bin/start-project start-project",
             "@composer update"
         ]
+    },
+    "require-dev": {
     }
 }
