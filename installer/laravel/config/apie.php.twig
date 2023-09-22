@@ -1,0 +1,34 @@
+<?php
+
+use Apie\DoctrineEntityDatalayer\DoctrineEntityDatalayer;
+
+return [
+    'cms' => [
+        'base_url' => '/cms',
+        'dashboard_template' => 'apie/dashboard.html.twig',
+        'error_template' => 'apie/error.html.twig',
+        'asset_folders' => [],
+    ],
+    'doctrine' => [
+        'build_once' => false,
+        'run_migrations' => true,
+        'connection_params' => [
+            'driver' => 'pdo_sqlite',
+            'path' => base_path("db.sqlite"),
+        ]
+    ],
+    'datalayers' => [
+        'default_datalayer' => DoctrineEntityDatalayer::class,
+    ],
+    'bounded_contexts' => [
+        'example' => [
+            'entities_folder' => base_path("src/Apie/Example/Resources/"),
+            'entities_namespace' => 'App\Apie\Example\Resources',
+            'actions_folder' => base_path("src/Apie/Example/Actions/"),
+            'actions_namespace' => 'App\Apie\Example\Actions',
+        ],
+    ],
+    'rest_api' => [
+        'base_url' => '/api',
+    ]
+];

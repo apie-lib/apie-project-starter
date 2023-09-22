@@ -46,8 +46,9 @@ class ProjectStarterCommand extends Command
 
         $composerJson = [
             "name" => 'vendor/' . basename(realpath(__DIR__ . '/../')),
-            "description" => "Apie project",
+            "description" => "This project was created with apie/apie-project-starter",
             "license" => "proprietary",
+            "keywords" => ["apie", "rest", "api", "openapi"],
             "minimum-stability" => "dev",
             "prefer-stable" => true,
             "require" => [],

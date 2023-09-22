@@ -11,16 +11,46 @@ use Symfony\Component\Finder\Finder;
 class LaravelSetup implements FrameworkSetupInterface
 {
     const IGNORE_LIST = [
-        'composer.json',
-        'composer.lock',
+        '/composer.json',
+        '/composer.lock',
     ];
 
     public function modifyComposerFileContents(array $composerJson, ProjectStarterConfig $projectStarterConfig): array
     {
+        $composerJson['keywords'][] = 'laravel';
+        $composerJson['keywords'][] = 'framework';
+
         $composerJson['require']['apie/laravel-apie'] = ProjectStarterCommand::APIE_VERSION_TO_INSTALL;
-        $composerJson['require']["laravel/laravel"] = "7.*|8.*|9.*|10.*";
+        $composerJson['require']["laravel/framework"] = "^10.10";
+        $composerJson['require']['laravel/sanctum'] = '^3.2';
+        $composerJson['require']['guzzlehttp/guzzle'] = '^7.2';
+
         $composerJson['autoload']['psr-4']["App\\"] = "app/";
-        unset($composerJson['require-dev']);
+        $composerJson['autoload']['psr-4']["Database\\Factories\\"] = "database/factories/";
+        $composerJson['autoload']['psr-4']["Database\\Seeders\\"] = "database/seeders/";
+        
+        $composerJson['require-dev']['nunomaduro/collision'] = "^7.0";
+        $composerJson['require-dev']['spatie/laravel-ignition'] = '^2.0';
+
+        $composerJson['scripts'] = [
+            "post-autoload-dump" => [
+                "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+                "@php artisan package:discover --ansi"
+            ],
+            "post-update-cmd" => [
+                "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            ]
+        ];
+
+        $composerJson['config'] = [
+            "optimize-autoloader" => true,
+            "preferred-install" => "dist",
+            "sort-packages" => true,
+        ];
+
+        $composerJson['extra'] = [
+            "laravel" => ["dont-discover" => []]
+        ];
         return $composerJson;
     }
 
@@ -61,13 +91,14 @@ class LaravelSetup implements FrameworkSetupInterface
         $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('laravel-git');
         @mkdir($path, recursive: true);
         try {
-            $git = new \CzProject\GitPhp\Git;
+            $git = new Git;
             $git->cloneRepository($gitUrl, $path);
             foreach (Finder::create()->files()->in($path) as $file) {
-                if (in_array($file->getRelativePath(), self::IGNORE_LIST)) {
+                $targetFile = $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename();
+                if (in_array($targetFile, self::IGNORE_LIST)) {
                     continue;
                 }
-                $targetFile = $targetPath . DIRECTORY_SEPARATOR . $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename();
+                $targetFile = $targetPath . DIRECTORY_SEPARATOR . $targetFile;
                 @mkdir(dirname($targetFile), recursive: true);
                 rename($file->getRealPath(), $targetFile);
             }
