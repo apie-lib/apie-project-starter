@@ -42,8 +42,14 @@ config/apie.yaml and look for the section with doctrine, connection_params. The 
 the [doctrine bundle DBAL configuration](https://symfony.com/doc/current/reference/configuration/doctrine.html).
 
 ## Running the created project with development settings (Laravel)
-If you picked Laravel it will install Laravel as framework. 
-This option is not working yet.
+If you picked Laravel it will install Laravel as framework. You can start a test server by filling in the terminal
+```
+./artisan serve
+```
+## Configuring database connections (Laravel)
+By default the starter is configured to install everything in a sqlite file. If you want to change this open
+config/apie.php and look for the section with doctrine, connection_params. The available options are the same as
+the [doctrine bundle DBAL configuration](https://symfony.com/doc/current/reference/configuration/doctrine.html).
 
 ## Editing/modifying the project starter
 You can checkout this repo and test the create-project functionality with make and running this
