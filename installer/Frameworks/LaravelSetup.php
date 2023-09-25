@@ -65,6 +65,13 @@ class LaravelSetup implements FrameworkSetupInterface
             $cachePath
         );
         $render->renderAll($targetPath);
+        if ($projectStarterConfig->includeCms) {
+            $render = new TwigRender(
+                __DIR__ . '/../laravel-cms',
+                $cachePath
+            );
+            $render->renderAll($targetPath);
+        }
         if ($projectStarterConfig->includeUser) {
             $render = new TwigRender(
                 __DIR__ . '/../user',
