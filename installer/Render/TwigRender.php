@@ -22,7 +22,7 @@ final class TwigRender
 
     public function renderAll(string $targetPath): void
     {
-        foreach (Finder::create()->files()->name('*.twig')->in($this->templatePath) as $file) {
+        foreach (Finder::create()->files()->name('/.+.twig/')->ignoreDotFiles(false)->in($this->templatePath) as $file) {
             $templateFile = $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename('.twig');
             $targetFile = $targetPath . DIRECTORY_SEPARATOR . $templateFile;
             @mkdir(dirname($targetFile), recursive: true);
