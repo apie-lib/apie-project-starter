@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[Route('/')]
 class RootController
 {
-    public function __invoke(UrlGeneratorInterface $urlGenerator)
+    public function __invoke(UrlGeneratorInterface $urlGenerator): RedirectResponse
     {
         try {
             return new RedirectResponse($urlGenerator->generate('apie.example.cms.dashboard'));
