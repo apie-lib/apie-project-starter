@@ -11,7 +11,7 @@ class Example implements EntityInterface
 
     public function __construct(private string $requiredString)
     {
-        $this->id = ExampleId::createRandom();
+        $this->id = ExampleId::createRandom(); // @phpstan-ignore-line
     }
     public function getId(): ExampleId
     {

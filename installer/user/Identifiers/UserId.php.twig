@@ -7,6 +7,9 @@ use Apie\Core\Identifiers\IdentifierInterface;
 use App\Apie\Example\Resources\User;
 use ReflectionClass;
 
+/**
+ * @implements IdentifierInterface<User>
+ */
 class UserId extends Email implements IdentifierInterface
 {
     public static function getReferenceFor(): ReflectionClass

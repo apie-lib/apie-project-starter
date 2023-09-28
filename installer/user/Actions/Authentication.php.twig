@@ -26,6 +26,6 @@ class Authentication
             return $user->verifyPassword($password) ? $user : null;
         }
 
-        return $user;
+        return null; // @phpstan-ignore-line
     }
 }
