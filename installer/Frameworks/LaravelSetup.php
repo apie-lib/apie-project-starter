@@ -91,7 +91,6 @@ class LaravelSetup implements FrameworkSetupInterface
             '!.gitignore'
         );
         chmod($targetPath . DIRECTORY_SEPARATOR . 'artisan', 0744);
-        system('./artisan key:generate');
     }
 
     private function getFileFromGit(string $gitUrl, string $targetPath): void
