@@ -20,10 +20,6 @@ class ProjectStarterCommand extends Command
 {
     public const APIE_VERSION_TO_INSTALL = '1.0.0.x-dev';
 
-    private const CLASSES = [
-        GithubActionError::class
-    ];
-
     protected function configure()
     {
         $this->setName('start-project')
@@ -52,7 +48,10 @@ class ProjectStarterCommand extends Command
             "minimum-stability" => "dev",
             "prefer-stable" => true,
             "require" => [],
-            "require-dev" => [],
+            "require-dev" => [
+                "apie/apie-phpstan-rules" => self::APIE_VERSION_TO_INSTALL,
+                "phpstan/phpstan" => '^1.8.2',
+            ],
             "autoload" => [
             ],
             "autoload-dev" => [
