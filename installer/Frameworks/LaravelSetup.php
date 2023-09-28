@@ -31,6 +31,7 @@ class LaravelSetup implements FrameworkSetupInterface
         
         $composerJson['require-dev']['nunomaduro/collision'] = "^7.0";
         $composerJson['require-dev']['spatie/laravel-ignition'] = '^2.0';
+        $composerJson['require-dev']['nunomaduro/larastan'] = '^2.0';
 
         $composerJson['scripts'] = [
             "post-autoload-dump" => [
