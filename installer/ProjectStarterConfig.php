@@ -7,7 +7,8 @@ final class ProjectStarterConfig
         public readonly string $setup,
         public readonly string $framework,
         public readonly bool $includeCms,
-        public readonly bool $includeUser
+        public readonly bool $includeUser,
+        public readonly bool $enable2Fa
     ) {
     }
 }

@@ -3,6 +3,7 @@
 namespace Apie\ApieProjectStarter\Render;
 
 use Apie\ApieProjectStarter\ProjectStarterCommand;
+use Apie\ApieProjectStarter\ProjectStarterConfig;
 use Apie\Core\ApieLib;
 use Symfony\Component\Finder\Finder;
 use Twig\Environment;
@@ -12,8 +13,11 @@ final class TwigRender
 {
     private Environment $twig;
 
-    public function __construct(private readonly string $templatePath, private readonly string $cachePath)
-    {
+    public function __construct(
+        private readonly string $templatePath,
+        private readonly string $cachePath,
+        private readonly ProjectStarterConfig $projectStarterConfig
+    ) {
         $loader = new FilesystemLoader($this->templatePath);
         $this->twig = new Environment($loader, [
             'cache' => $this->cachePath,
@@ -28,7 +32,13 @@ final class TwigRender
             @mkdir(dirname($targetFile), recursive: true);
             file_put_contents(
                 $targetFile,
-                $this->twig->render($templateFile . '.twig', ['apieVersion' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL])
+                $this->twig->render(
+                    $templateFile . '.twig',
+                    [
+                        'apieVersion' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
+                        'config' => $this->projectStarterConfig,
+                    ]
+                )
             );
         }
     }

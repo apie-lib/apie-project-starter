@@ -63,26 +63,30 @@ class LaravelSetup implements FrameworkSetupInterface
         $this->getFileFromGit('https://github.com/laravel/laravel.git', $targetPath);
         $render = new TwigRender(
             __DIR__ . '/../laravel',
-            $cachePath
+            $cachePath,
+            $projectStarterConfig
         );
         $render->renderAll($targetPath);
         if ($projectStarterConfig->includeCms) {
             $render = new TwigRender(
                 __DIR__ . '/../laravel-cms',
-                $cachePath
+                $cachePath,
+                $projectStarterConfig
             );
             $render->renderAll($targetPath);
         }
         if ($projectStarterConfig->includeUser) {
             $render = new TwigRender(
                 __DIR__ . '/../user',
-                $cachePath
+                $cachePath,
+                $projectStarterConfig
             );
             $render->renderAll($examplePath);
         }
         $render = new TwigRender(
             __DIR__ . '/../example',
-            $cachePath
+            $cachePath,
+            $projectStarterConfig
         );
         $render->renderAll($examplePath);
 

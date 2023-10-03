@@ -27,7 +27,8 @@ class ProjectStarterCommand extends Command
             ->addOption('setup', null, InputArgument::OPTIONAL, 'Project setup (minimal/preferred/maximum)')
             ->addOption('cms', null, InputArgument::OPTIONAL, 'Enable CMS')
             ->addOption('framework', null, InputArgument::OPTIONAL, 'Framework (Laravel/Symfony)')
-            ->addOption('user-object', null, InputArgument::OPTIONAL, 'Default user object (yes/no)');
+            ->addOption('user-object', null, InputArgument::OPTIONAL, 'Default user object (yes/no)')
+            ->addOption('enable-2fa', null, InputArgument::OPTIONAL, 'Enable 2FA for default user (yes/no)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,6 +40,7 @@ class ProjectStarterCommand extends Command
         $cms = $input->getOption('cms');
         $framework = $input->getOption('framework');
         $userObject = $input->getOption('user-object');
+        $enable2Fa = $input->getOption('enable-2fa');
 
         $composerJson = [
             "name" => 'vendor/' . basename(realpath(__DIR__ . '/../')),
@@ -91,15 +93,22 @@ class ProjectStarterCommand extends Command
             $userQuestion = new ConfirmationQuestion('Do you want a default user object? (yes/no): ', true);
             $userObject = $helper->ask($input, $output, $userQuestion);
         }
+        if ($userObject && $enable2Fa === null) {
+            $userQuestion = new ConfirmationQuestion('Do you want to enable 2FA for authentication? (yes/no): ', false);
+            $enable2Fa = $helper->ask($input, $output, $userQuestion);
+        }
 
         $output->writeln("Project setup: $setup");
         $output->writeln('Apie CMS: ' . ($cms ? 'yes' : 'no'));
         $output->writeln("Framework: $framework");
         $output->writeln("Default user object: " . ($userObject ? 'yes' : 'no'));
-        $projectConfig = new ProjectStarterConfig($setup, $framework, $cms, $userObject);
+        $projectConfig = new ProjectStarterConfig($setup, $framework, $cms, $userObject, $enable2Fa ?? false);
 
         $frameworkSetup = $this->getFrameworkSetup($projectConfig);
         $composerJson['require']['apie/meta-' . $setup] = self::APIE_VERSION_TO_INSTALL;
+        if ($enable2Fa) {
+            $composerJson['require']['apie/otp-value-objects'] = self::APIE_VERSION_TO_INSTALL;
+        }
         $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $projectConfig);
 
         $output->writeln(json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
