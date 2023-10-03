@@ -6,6 +6,9 @@ use Apie\Common\ApieFacade;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Exceptions\EntityNotFoundException;
+{% if config.enable2Fa -%}
+use Apie\OtpValueObjects\OTP;
+{% endif %}
 use App\Apie\Example\Identifiers\UserId;
 use App\Apie\Example\Resources\User;
 
@@ -15,7 +18,7 @@ class Authentication
     {
     }
 
-    public function verifyAuthentication(UserId $username, string $password): ?User
+    public function verifyAuthentication(UserId $username, string $password{% if config.enable2Fa -%}, OTP $otp{% endif %}): ?User
     {
         try {
             $user = $this->apie->find($username, new BoundedContextId('example'));
@@ -23,7 +26,7 @@ class Authentication
             return null;
         }
         if ($user instanceof User) {
-            return $user->verifyPassword($password) ? $user : null;
+            return $user->verifyPassword($password{% if config.enable2Fa -%}, $otp{% endif %}) ? $user : null;
         }
 
         return null; // @phpstan-ignore-line

@@ -4,13 +4,14 @@ namespace App\Apie\Example\Resources;
 use Apie\CommonValueObjects\Email;
 use Apie\Core\Entities\EntityInterface;
 {% if config.enable2Fa -%}
-use Apie\OtpValueObjects\OTP;
-use Apie\OtpValueObjects\TotpSecret;
+use Apie\OtpValueObjects\TOTPSecret;
 {%- endif %}
+use Apie\Serializer\Exceptions\ValidationException;
 use Apie\TextValueObjects\DatabaseText;
 use Apie\TextValueObjects\EncryptedPassword;
 use Apie\TextValueObjects\StrongPassword;
 use App\Apie\Example\Identifiers\UserId;
+{% if config.enable2Fa -%}use App\Apie\Example\ValueObjects\VerifyUserOTP;{%- endif %}
 use LogicException;
 
 final class User implements EntityInterface
@@ -18,7 +19,7 @@ final class User implements EntityInterface
     private EncryptedPassword $password;
     private ?DatabaseText $blockedReason = null;
     {% if config.enable2Fa -%}
-    private TotpSecret $totp;
+    private TOTPSecret $totp;
     private bool $totpActivated = false;
     {% endif %}
 
@@ -29,6 +30,7 @@ final class User implements EntityInterface
         {% if config.enable2Fa -%}
         $this->totp = TotpSecret::createRandom();
         {%- endif %}
+    
         $this->password = EncryptedPassword::fromUnencryptedPassword($password);
     }
 
@@ -52,16 +54,18 @@ final class User implements EntityInterface
         return $this->blockedReason;
     }
 
-    private function checkUnblocked(): void
+    private function checkUnblocked(string $field): void
     {
         if ($this->blockedReason !== null) {
-            throw new LogicException('User "' . $this->email . '" is blocked!');
+            throw ValidationException::createFromArray([
+                $field => new LogicException('User "' . $this->email . '" is blocked!')
+            ]);
         }
     }
 
     public function block(DatabaseText $blockedReason): User
     {
-        $this->checkUnblocked();
+        $this->checkUnblocked('blockedReason');
         $this->blockedReason = $blockedReason;
 
         return $this;
@@ -77,24 +81,32 @@ final class User implements EntityInterface
         return $this;
     }
 
+{% if config.enable2Fa -%}
     public function reset2FA(): void
     {
+        $this->checkUnblocked('');
         $this->totp = TotpSecret::createRandom();
         $this->totpActivated = false;
     }
     
-    public function enable2FA(OTP $otp): void
+    public function enable2FA(VerifyUserOTP $otp): void
     {
+        $this->checkUnblocked('otp');
         if ($this->totp->verify($otp)) {
             $this->totpActivated = true;
+        } else {
+            throw ValidationException::createFromArray([
+                'otp' => new LogicException('Code is incorrect')
+            ]);
         }
     }
+{% endif %}
 
     public function verifyPassword(string $password): bool
     {
-        $this->checkUnblocked();
+        $this->checkUnblocked('password');
         {% if config.enable2Fa -%}
-        if (!$this->encryptedPassword->verify($password)) {
+        if (!$this->password->verifyUnencryptedPassword($password)) {
             return false;
         }
         if ($this->totpActivated && $totp) {
@@ -105,5 +117,6 @@ final class User implements EntityInterface
         {%- else -%}
         return $this->password->verifyUnencryptedPassword($password);
         {%- endif %}
+
     }
 }

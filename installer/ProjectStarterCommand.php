@@ -106,10 +106,10 @@ class ProjectStarterCommand extends Command
 
         $frameworkSetup = $this->getFrameworkSetup($projectConfig);
         $composerJson['require']['apie/meta-' . $setup] = self::APIE_VERSION_TO_INSTALL;
+        $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $projectConfig);
         if ($enable2Fa) {
             $composerJson['require']['apie/otp-value-objects'] = self::APIE_VERSION_TO_INSTALL;
         }
-        $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $projectConfig);
 
         $output->writeln(json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         file_put_contents(Factory::getComposerFile(), json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
