@@ -16,6 +16,7 @@ use LogicException;
 
 final class User implements EntityInterface
 {
+    private UserId $id;
     private EncryptedPassword $password;
     private ?DatabaseText $blockedReason = null;
     {% if config.enable2Fa -%}
@@ -24,9 +25,10 @@ final class User implements EntityInterface
     {% endif %}
 
     public function __construct(
-        private UserId $email,
+        private Email $email,
         StrongPassword $password
     ) {
+        $this->id = UserId::fromNative($email);
         {% if config.enable2Fa -%}
         $this->totp = TotpSecret::createRandom();
         {%- endif %}
@@ -36,7 +38,7 @@ final class User implements EntityInterface
 
     public function getId(): UserId
     {
-        return $this->email;
+        return $this->id;
     }
 
     public function getEmail(): Email
