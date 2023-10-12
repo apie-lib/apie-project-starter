@@ -19,7 +19,7 @@
         "post-create-project-cmd": [
             "@php bin/start-project start-project",
             "@composer update --no-interaction",
-            "bin/console apie:seed-entities | true"
+            "bin/console apie:seed-entities || true"
         ]
     },
     "require-dev": {

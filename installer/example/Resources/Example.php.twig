@@ -7,6 +7,7 @@ use Apie\Core\Attributes\Requires;
 use Apie\Core\Attributes\RuntimeCheck;
 {% endif %}
 use Apie\Core\Entities\EntityInterface;
+use App\Apie\Example\Dtos\DtoExample;
 use App\Apie\Example\Identifiers\ExampleId;
 
 {% if config.includeUser -%}
@@ -15,6 +16,8 @@ use App\Apie\Example\Identifiers\ExampleId;
 class Example implements EntityInterface
 {
     private ExampleId $id;
+
+    public DtoExample $DtoExample;
 
     public function __construct(private string $requiredString)
     {

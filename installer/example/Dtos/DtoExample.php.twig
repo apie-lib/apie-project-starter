@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Apie\Example\Dtos;
+
+use Apie\Core\Dto\DtoInterface;
+{% if config.setup != 'minimal' -%}
+use Apie\TextValueObjects\DatabaseText;
+{% endif %}
+
+class DtoExample implements DtoInterface
+{
+    public {% if config.setup == 'minimal' %}string{% else %}DatabaseText{% endif %} $description;
+
+    public string $name;
+}

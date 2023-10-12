@@ -104,7 +104,7 @@ final class User implements EntityInterface
     }
 {% endif %}
 
-    public function verifyPassword(string $password, ?OTP $otp): bool
+    public function verifyPassword(string $password{% if config.enable2Fa -%}, ?OTP $otp{% endif %}): bool
     {
         $this->checkUnblocked('password');
         {% if config.enable2Fa -%}
