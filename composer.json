@@ -18,7 +18,7 @@
     "scripts": {
         "post-create-project-cmd": [
             "@php bin/start-project start-project",
-            "@composer update"
+            "@composer update --no-interaction"
         ]
     },
     "require-dev": {

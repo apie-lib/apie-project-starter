@@ -18,7 +18,7 @@ class Authentication
     {
     }
 
-    public function verifyAuthentication(UserId $username, string $password{% if config.enable2Fa -%}, OTP $otp{% endif %}): ?User
+    public function verifyAuthentication(UserId $username, string $password{% if config.enable2Fa -%}, ?OTP $otp{% endif %}): ?User
     {
         try {
             $user = $this->apie->find($username, new BoundedContextId('example'));
