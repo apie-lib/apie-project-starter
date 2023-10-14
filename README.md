@@ -6,9 +6,7 @@
 
 
 
- [![Latest Stable Version](http://poser.pugx.org/apie/apie-project-starter/v)](https://packagist.org/packages/apie/apie-project-starter) [![Total Downloads](http://poser.pugx.org/apie/apie-project-starter/downloads)](https://packagist.org/packages/apie/apie-project-starter) [![Latest Unstable Version](http://poser.pugx.org/apie/apie-project-starter/v/unstable)](https://packagist.org/packages/apie/apie-project-starter) [![License](http://poser.pugx.org/apie/apie-project-starter/license)](https://packagist.org/packages/apie/apie-project-starter) [![PHP Version Require](http://poser.pugx.org/apie/apie-project-starter/require/php)](https://packagist.org/packages/apie/apie-project-starter) [![Code coverage](https://raw.githubusercontent.com/apie-lib/apie-project-starter/main/coverage_badge.svg)](https://apie-lib.github.io/coverage/apie-project-starter/index.html)  
-
-[![PHP Composer](https://github.com/apie-lib/apie-project-starter/actions/workflows/php.yml/badge.svg?event=push)](https://github.com/apie-lib/apie-project-starter/actions/workflows/php.yml)
+ [![Latest Stable Version](http://poser.pugx.org/apie/apie-project-starter/v)](https://packagist.org/packages/apie/apie-project-starter) [![Total Downloads](http://poser.pugx.org/apie/apie-project-starter/downloads)](https://packagist.org/packages/apie/apie-project-starter) [![Latest Unstable Version](http://poser.pugx.org/apie/apie-project-starter/v/unstable)](https://packagist.org/packages/apie/apie-project-starter) [![License](http://poser.pugx.org/apie/apie-project-starter/license)](https://packagist.org/packages/apie/apie-project-starter) [![PHP Version Require](http://poser.pugx.org/apie/apie-project-starter/require/php)](https://packagist.org/packages/apie/apie-project-starter)
 
 This package is part of the [Apie](https://github.com/apie-lib) library.
 
