@@ -3,8 +3,10 @@
 namespace App\Apie\Example\Actions;
 
 use Apie\Common\ApieFacade;
+use Apie\Core\Attributes\Not;
+use Apie\Core\Attributes\Requires;
+use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Exceptions\EntityNotFoundException;
 {% if config.enable2Fa -%}
 use Apie\OtpValueObjects\OTP;
@@ -18,6 +20,7 @@ class Authentication
     {
     }
 
+    #[RuntimeCheck(new Not(new Requires('authenticated')))]
     public function verifyAuthentication(UserId $username, string $password{% if config.enable2Fa -%}, ?OTP $otp{% endif %}): ?User
     {
         try {
