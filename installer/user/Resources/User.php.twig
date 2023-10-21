@@ -2,19 +2,22 @@
 namespace App\Apie\Example\Resources;
 
 use Apie\CommonValueObjects\Email;
-use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Attributes\Internal;
+use Apie\Core\Entities\EntityWithStatesInterface;
+use Apie\Core\Lists\StringList;
 {% if config.enable2Fa -%}
 use Apie\OtpValueObjects\TOTPSecret;
-{%- endif %}
+{% endif %}
 use Apie\Serializer\Exceptions\ValidationException;
 use Apie\TextValueObjects\DatabaseText;
 use Apie\TextValueObjects\EncryptedPassword;
 use Apie\TextValueObjects\StrongPassword;
 use App\Apie\Example\Identifiers\UserId;
-{% if config.enable2Fa -%}use App\Apie\Example\ValueObjects\VerifyUserOTP;{%- endif %}
+{% if config.enable2Fa -%}use App\Apie\Example\ValueObjects\VerifyUserOTP;
+{% endif %}
 use LogicException;
 
-final class User implements EntityInterface
+final class User implements EntityWithStatesInterface
 {
     private UserId $id;
     private EncryptedPassword $password;
@@ -83,7 +86,20 @@ final class User implements EntityInterface
         return $this;
     }
 
-{% if config.enable2Fa -%}
+    #[Internal]
+    public function provideAllowedMethods(): StringList
+    {
+        return new StringList(
+            $this->isBlocked() ? ['unblock'] : ['block'{% if config.enable2Fa %}, ($this->has2FaEnabled() ? 'reset2FA' : 'enable2FA'), {% endif %}]
+        ); 
+    }
+
+{% if config.enable2Fa %}
+    public function has2FaEnabled(): bool
+    {
+        return $this->totpActivated;
+    }
+
     public function reset2FA(): void
     {
         $this->checkUnblocked('');
