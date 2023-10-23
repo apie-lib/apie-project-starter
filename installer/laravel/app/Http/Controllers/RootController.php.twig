@@ -3,18 +3,16 @@
 namespace App\Http\Controllers;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RootController
 {
-    public function __invoke(UrlGeneratorInterface $urlGenerator): RedirectResponse
+    public function __invoke(): RedirectResponse
     {
         try {
-            return new RedirectResponse($urlGenerator->generate('apie.example.cms.dashboard'));
+            return new RedirectResponse(route('apie.example.cms.dashboard'));
         } catch (RouteNotFoundException) {
-            return new RedirectResponse($urlGenerator->generate('apie.example.swagger_ui'));
+            return new RedirectResponse(route('apie.example.swagger_ui'));
         }
     }
 }
