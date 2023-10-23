@@ -6,6 +6,7 @@ use Apie\Core\Attributes\Internal;
 use Apie\Core\Entities\EntityWithStatesInterface;
 use Apie\Core\Lists\StringList;
 {% if config.enable2Fa -%}
+use Apie\OtpValueObjects\OTP;
 use Apie\OtpValueObjects\TOTPSecret;
 {% endif %}
 use Apie\Serializer\Exceptions\ValidationException;
