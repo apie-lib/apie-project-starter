@@ -20,7 +20,7 @@
             "@php bin/start-project start-project",
             "@composer update --no-interaction",
             "bin/console apie:seed-entities || true",
-            "./artisan apie:seed-entities || true"
+            "./artisan key:generate && ./artisan apie:seed-entities || true"
         ]
     },
     "require-dev": {
