@@ -1,6 +1,7 @@
 <?php
 namespace App\Apie\Example\Resources;
 
+use Apie\Common\Interfaces\CheckLoginStatusInterface;
 use Apie\CommonValueObjects\Email;
 use Apie\Core\Attributes\Internal;
 use Apie\Core\Entities\EntityWithStatesInterface;
@@ -18,7 +19,7 @@ use App\Apie\Example\Identifiers\UserId;
 {% endif %}
 use LogicException;
 
-final class User implements EntityWithStatesInterface
+final class User implements EntityWithStatesInterface, CheckLoginStatusInterface
 {
     private UserId $id;
     private EncryptedPassword $password;
@@ -50,7 +51,7 @@ final class User implements EntityWithStatesInterface
         return $this->email;
     }
 
-    public function isBlocked(): bool
+    public function isDisabled(): bool
     {
         return $this->blockedReason !== null;
     }
@@ -91,7 +92,7 @@ final class User implements EntityWithStatesInterface
     public function provideAllowedMethods(): StringList
     {
         return new StringList(
-            $this->isBlocked() ? ['unblock'] : ['block'{% if config.enable2Fa %}, ($this->has2FaEnabled() ? 'reset2FA' : 'enable2FA'), {% endif %}]
+            $this->isDisabled() ? ['unblock'] : ['block'{% if config.enable2Fa %}, ($this->has2FaEnabled() ? 'reset2FA' : 'enable2FA'), {% endif %}]
         ); 
     }
 
