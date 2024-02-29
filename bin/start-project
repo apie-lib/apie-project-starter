@@ -7,7 +7,16 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
 }
 
 use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
 use Apie\ApieProjectStarter\ProjectStarterCommand;
+
+$dotenv = new Dotenv();
+$paths = [getcwd() . '/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
+foreach ($paths as $path) {
+    if (is_readable($path)) {
+        $dotenv->load($path);
+    }
+}
 
 $application = new Application();
 $application->add(new ProjectStarterCommand());
