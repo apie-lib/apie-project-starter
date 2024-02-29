@@ -6,15 +6,12 @@ use Apie\ApieProjectStarter\Frameworks\FrameworkSetupInterface;
 use Apie\ApieProjectStarter\Frameworks\LaravelSetup;
 use Apie\ApieProjectStarter\Frameworks\SymfonySetup;
 use Composer\Factory;
-use ReflectionClass;
-use Composer\Console\GithubActionError;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 class ProjectStarterCommand extends Command
 {
@@ -24,11 +21,51 @@ class ProjectStarterCommand extends Command
     {
         $this->setName('start-project')
             ->setDescription('Start a new project with options')
-            ->addOption('setup', null, InputArgument::OPTIONAL, 'Project setup (minimal/preferred/maximum)')
-            ->addOption('cms', null, InputArgument::OPTIONAL, 'Enable CMS')
-            ->addOption('framework', null, InputArgument::OPTIONAL, 'Framework (Laravel/Symfony)')
-            ->addOption('user-object', null, InputArgument::OPTIONAL, 'Default user object (yes/no)')
-            ->addOption('enable-2fa', null, InputArgument::OPTIONAL, 'Enable 2FA for default user (yes/no)');
+            ->addOption(
+                'setup',
+                getenv('APIE_STARTER_SETUP'),
+                InputArgument::OPTIONAL,
+                'Project setup (minimal/preferred/maximum)'
+            )
+            ->addOption(
+                'cms',
+                getenv('APIE_STARTER_ENABLE_CMS'),
+                InputArgument::OPTIONAL,
+                'Enable CMS'
+            )
+            ->addOption(
+                'framework',
+                getenv('APIE_STARTER_FRAMEWORK'),
+                InputArgument::OPTIONAL,
+                'Framework (Laravel/Symfony)'
+            )
+            ->addOption(
+                'user-object',
+                getenv('APIE_STARTER_ENABLE_USER'),
+                InputArgument::OPTIONAL,
+                'Default user object (yes/no)'
+            )
+            ->addOption(
+                'enable-2fa',
+                getenv('APIE_STARTER_ENABLE_2FA'),
+                InputArgument::OPTIONAL,
+                'Enable 2FA for default user (yes/no)'
+            );
+    }
+
+    private function fromOptions(mixed $value, array $allowedOptions): mixed
+    {
+        if (is_string($value)) {
+            if (in_array($value, $allowedOptions)) {
+                return $value;
+            }
+        }
+        return null;
+    }
+
+    private function fromBoolean(mixed $value): mixed
+    {
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,11 +73,11 @@ class ProjectStarterCommand extends Command
         $helper = $this->getHelper('question');
 
         // Check if options are provided, otherwise, ask interactively
-        $setup = $input->getOption('setup');
-        $cms = $input->getOption('cms');
-        $framework = $input->getOption('framework');
-        $userObject = $input->getOption('user-object');
-        $enable2Fa = $input->getOption('enable-2fa');
+        $setup = $this->fromOptions($input->getOption('setup'), ['minimal', 'preferred', 'maximum']);
+        $cms = $this->fromBoolean($input->getOption('cms'));
+        $framework = $this->fromOptions($input->getOption('framework'), ['Symfony', 'Laravel']);
+        $userObject = $this->fromBoolean($input->getOption('user-object'));
+        $enable2Fa = $this->fromBoolean($input->getOption('enable-2fa'));
 
         $composerJson = [
             "name" => 'vendor/' . basename(realpath(__DIR__ . '/../')),
