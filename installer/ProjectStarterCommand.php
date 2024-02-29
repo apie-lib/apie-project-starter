@@ -81,6 +81,7 @@ class ProjectStarterCommand extends Command
     {
         $helper = $this->getHelper('question');
 
+        var_dump($input->getOption('setup'));
         // Check if options are provided, otherwise, ask interactively
         $setup = $this->fromOptions($input->getOption('setup'), ['minimal', 'preferred', 'maximum']);
         $cms = $this->fromBoolean($input->getOption('cms'));
