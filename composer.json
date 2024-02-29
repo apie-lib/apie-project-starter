@@ -19,7 +19,7 @@
     "scripts": {
         "post-create-project-cmd": [
             "Composer\\Config::disableProcessTimeout",
-            "@php bin/start-project start-project",
+            "env -i php bin/start-project start-project",
             "@composer update --no-interaction",
             "bin/console apie:seed-entities || true",
             "./artisan key:generate && ./artisan apie:seed-entities || true"

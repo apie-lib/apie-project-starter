@@ -23,31 +23,31 @@ class ProjectStarterCommand extends Command
             ->setDescription('Start a new project with options')
             ->addOption(
                 'setup',
-                getenv('APIE_STARTER_SETUP'),
+                $_ENV['APIE_STARTER_SETUP'] ?? null,
                 InputArgument::OPTIONAL,
                 'Project setup (minimal/preferred/maximum)'
             )
             ->addOption(
                 'cms',
-                getenv('APIE_STARTER_ENABLE_CMS'),
+                $_ENV['APIE_STARTER_ENABLE_CMS'] ?? null,
                 InputArgument::OPTIONAL,
                 'Enable CMS'
             )
             ->addOption(
                 'framework',
-                getenv('APIE_STARTER_FRAMEWORK'),
+                $_ENV['APIE_STARTER_FRAMEWORK'] ?? null,
                 InputArgument::OPTIONAL,
                 'Framework (Laravel/Symfony)'
             )
             ->addOption(
                 'user-object',
-                getenv('APIE_STARTER_ENABLE_USER'),
+                $_ENV['APIE_STARTER_ENABLE_USER'] ?? null,
                 InputArgument::OPTIONAL,
                 'Default user object (yes/no)'
             )
             ->addOption(
                 'enable-2fa',
-                getenv('APIE_STARTER_ENABLE_2FA'),
+                $_ENV['APIE_STARTER_ENABLE_2FA'] ?? null,
                 InputArgument::OPTIONAL,
                 'Enable 2FA for default user (yes/no)'
             );
