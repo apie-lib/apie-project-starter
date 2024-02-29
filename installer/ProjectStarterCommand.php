@@ -6,7 +6,6 @@ use Apie\ApieProjectStarter\Frameworks\FrameworkSetupInterface;
 use Apie\ApieProjectStarter\Frameworks\LaravelSetup;
 use Apie\ApieProjectStarter\Frameworks\SymfonySetup;
 use Composer\Factory;
-use Dotenv\Dotenv;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +20,14 @@ class ProjectStarterCommand extends Command
 
     protected function configure()
     {
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(true);
+        $paths = [getcwd() . '/.env', __DIR__.'/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
+        foreach ($paths as $path) {
+            if (is_readable($path)) {
+                $dotenv->load($path);
+            }
+        }
         $this->setName('start-project')
             ->setDescription('Start a new project with options')
             ->addOption(
@@ -73,13 +80,6 @@ class ProjectStarterCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $dotenv = new Dotenv();
-        $paths = [getcwd() . '/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
-        foreach ($paths as $path) {
-            if (is_readable($path)) {
-                $dotenv->load($path);
-            }
-        }
 
         // Check if options are provided, otherwise, ask interactively
         $setup = $this->fromOptions($input->getOption('setup'), ['minimal', 'preferred', 'maximum']);
