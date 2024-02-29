@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ProjectStarterCommand extends Command
 {
@@ -71,6 +72,13 @@ class ProjectStarterCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
+        $dotenv = new Dotenv();
+        $paths = [getcwd() . '/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
+        foreach ($paths as $path) {
+            if (is_readable($path)) {
+                $dotenv->load($path);
+            }
+        }
 
         // Check if options are provided, otherwise, ask interactively
         $setup = $this->fromOptions($input->getOption('setup'), ['minimal', 'preferred', 'maximum']);
