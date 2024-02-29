@@ -20,50 +20,45 @@ class ProjectStarterCommand extends Command
 
     protected function configure()
     {
-        $dotenv = new Dotenv();
-        $dotenv->usePutenv(true);
-        $paths = [getcwd() . '/.env', __DIR__.'/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
-        foreach ($paths as $path) {
-            if (is_readable($path)) {
-                $dotenv->load($path);
-            }
-        }
         $this->setName('start-project')
             ->setDescription('Start a new project with options')
             ->addOption(
                 'setup',
-                $_ENV['APIE_STARTER_SETUP'] ?? null,
+                null,
                 InputArgument::OPTIONAL,
                 'Project setup (minimal/preferred/maximum)'
             )
             ->addOption(
                 'cms',
-                $_ENV['APIE_STARTER_ENABLE_CMS'] ?? null,
+                null,
                 InputArgument::OPTIONAL,
                 'Enable CMS'
             )
             ->addOption(
                 'framework',
-                $_ENV['APIE_STARTER_FRAMEWORK'] ?? null,
+                null,
                 InputArgument::OPTIONAL,
                 'Framework (Laravel/Symfony)'
             )
             ->addOption(
                 'user-object',
-                $_ENV['APIE_STARTER_ENABLE_USER'] ?? null,
+                null,
                 InputArgument::OPTIONAL,
                 'Default user object (yes/no)'
             )
             ->addOption(
                 'enable-2fa',
-                $_ENV['APIE_STARTER_ENABLE_2FA'] ?? null,
+                null,
                 InputArgument::OPTIONAL,
                 'Enable 2FA for default user (yes/no)'
             );
     }
 
-    private function fromOptions(mixed $value, array $allowedOptions): mixed
+    private function fromOptions(mixed $value, string $environmentVariable, array $allowedOptions): mixed
     {
+        if ($value === null) {
+            $value = getenv($environmentVariable);
+        }
         if (is_string($value)) {
             if (in_array($value, $allowedOptions, true)) {
                 return $value;
@@ -72,22 +67,33 @@ class ProjectStarterCommand extends Command
         return null;
     }
 
-    private function fromBoolean(mixed $value): mixed
+    private function fromBoolean(mixed $value, string $environmentVariable): mixed
     {
+        if ($value === null) {
+            $value = getenv($environmentVariable);
+        }
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(true);
+        $paths = [getcwd() . '/.env', __DIR__.'/.env', __DIR__.'/../.env', __DIR__.'/../../.env', __DIR__.'/../../../.env'];
+        foreach ($paths as $path) {
+            if (is_readable($path)) {
+                $dotenv->load($path);
+            }
+        }
         $helper = $this->getHelper('question');
 
         var_dump($input->getOption('setup'));
         // Check if options are provided, otherwise, ask interactively
-        $setup = $this->fromOptions($input->getOption('setup'), ['minimal', 'preferred', 'maximum']);
-        $cms = $this->fromBoolean($input->getOption('cms'));
-        $framework = $this->fromOptions($input->getOption('framework'), ['Symfony', 'Laravel']);
-        $userObject = $this->fromBoolean($input->getOption('user-object'));
-        $enable2Fa = $this->fromBoolean($input->getOption('enable-2fa'));
+        $setup = $this->fromOptions($input->getOption('setup'), 'APIE_STARTER_SETUP', ['minimal', 'preferred', 'maximum']);
+        $cms = $this->fromBoolean($input->getOption('cms'), 'APIE_STARTER_ENABLE_CMS');
+        $framework = $this->fromOptions($input->getOption('framework'), 'APIE_STARTER_FRAMEWORK', ['Symfony', 'Laravel']);
+        $userObject = $this->fromBoolean($input->getOption('user-object'), 'APIE_STARTER_ENABLE_USER');
+        $enable2Fa = $this->fromBoolean($input->getOption('enable-2fa'), 'APIE_STARTER_ENABLE_2FA');
 
         $composerJson = [
             "name" => 'vendor/' . basename(realpath(__DIR__ . '/../')),
