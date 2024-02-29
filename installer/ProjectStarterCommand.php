@@ -56,7 +56,7 @@ class ProjectStarterCommand extends Command
     private function fromOptions(mixed $value, array $allowedOptions): mixed
     {
         if (is_string($value)) {
-            if (in_array($value, $allowedOptions)) {
+            if (in_array($value, $allowedOptions, true)) {
                 return $value;
             }
         }
