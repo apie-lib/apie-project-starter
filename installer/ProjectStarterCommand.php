@@ -6,6 +6,7 @@ use Apie\ApieProjectStarter\Frameworks\FrameworkSetupInterface;
 use Apie\ApieProjectStarter\Frameworks\LaravelSetup;
 use Apie\ApieProjectStarter\Frameworks\SymfonySetup;
 use Composer\Factory;
+use Dotenv\Dotenv;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
