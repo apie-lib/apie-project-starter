@@ -71,6 +71,9 @@ class ProjectStarterCommand extends Command
     {
         if ($value === null) {
             $value = getenv($environmentVariable);
+            if ($value === false) {
+                return null;
+            }
         }
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
@@ -87,7 +90,6 @@ class ProjectStarterCommand extends Command
         }
         $helper = $this->getHelper('question');
 
-        var_dump($input->getOption('setup'));
         // Check if options are provided, otherwise, ask interactively
         $setup = $this->fromOptions($input->getOption('setup'), 'APIE_STARTER_SETUP', ['minimal', 'preferred', 'maximum']);
         $cms = $this->fromBoolean($input->getOption('cms'), 'APIE_STARTER_ENABLE_CMS');
