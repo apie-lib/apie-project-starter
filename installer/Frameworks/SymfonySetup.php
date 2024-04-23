@@ -56,10 +56,12 @@ class SymfonySetup implements FrameworkSetupInterface
         $composerJson['autoload']['psr-4']["App\\"] = "src/";
         $composerJson['config'] = [
             "allow-plugins" => [
+                "apie/apie-common-plugin" => true,
                 "symfony/runtime" => true,
                 "symfony/flex" => true
             ],
         ];
+        $composerJson['conflict']['symfony/twig-bundle'] = "v6.4.0-BETA1";
         return $composerJson;
     }
 

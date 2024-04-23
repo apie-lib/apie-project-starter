@@ -28,7 +28,7 @@ class LaravelSetup implements FrameworkSetupInterface
         $composerJson['autoload']['psr-4']["App\\"] = "app/";
         $composerJson['autoload']['psr-4']["Database\\Factories\\"] = "database/factories/";
         $composerJson['autoload']['psr-4']["Database\\Seeders\\"] = "database/seeders/";
-        
+
         $composerJson['require-dev']['nunomaduro/collision'] = "^7.0";
         $composerJson['require-dev']['spatie/laravel-ignition'] = '^2.0';
         $composerJson['require-dev']['nunomaduro/larastan'] = '^2.0';
@@ -47,11 +47,15 @@ class LaravelSetup implements FrameworkSetupInterface
             "optimize-autoloader" => true,
             "preferred-install" => "dist",
             "sort-packages" => true,
+            "allow-plugins" => [
+                "apie/apie-common-plugin" => true,
+            ],
         ];
 
         $composerJson['extra'] = [
             "laravel" => ["dont-discover" => []]
         ];
+
         return $composerJson;
     }
 
@@ -59,7 +63,7 @@ class LaravelSetup implements FrameworkSetupInterface
     {
         $cachePath = $targetPath . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'setup';
         $examplePath = $targetPath . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Apie' . DIRECTORY_SEPARATOR . 'Example';
-        
+
         $this->getFileFromGit('https://github.com/laravel/laravel.git', $targetPath);
         $render = new TwigRender(
             __DIR__ . '/../laravel',
@@ -104,7 +108,8 @@ class LaravelSetup implements FrameworkSetupInterface
         @mkdir($path, recursive: true);
         try {
             $git = new Git;
-            $git->cloneRepository($gitUrl, $path);
+            $repo = $git->cloneRepository($gitUrl, $path);
+            $repo->checkout('10.x');
             foreach (Finder::create()->files()->in($path) as $file) {
                 $targetFile = $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename();
                 if (in_array($targetFile, self::IGNORE_LIST)) {
