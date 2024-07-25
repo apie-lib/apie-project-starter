@@ -6,13 +6,11 @@ namespace App\Apie\Example\Dtos;
 use Apie\CommonValueObjects\FullName;
 {% endif %}
 use Apie\Core\Dto\DtoInterface;
-{% if config.setup != 'minimal' -%}
-use Apie\TextValueObjects\DatabaseText;
-{% endif %}
+use Apie\Core\ValueObjects\DatabaseText;
 
 class DtoExample implements DtoInterface
 {
-    public {% if config.setup == 'minimal' %}string{% else %}DatabaseText{% endif %} $description;
+    public DatabaseText $description;
 
     public {% if config.setup == 'minimal' %}string{% else %}FullName{% endif %} $name;
 }
