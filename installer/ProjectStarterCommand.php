@@ -107,8 +107,8 @@ class ProjectStarterCommand extends Command
             "require" => [],
             "require-dev" => [
                 "apie/apie-phpstan-rules" => self::APIE_VERSION_TO_INSTALL,
-                "phpstan/phpstan" => '^1.8.2',
-                "phpunit/phpunit" => "^9.5",
+                "phpstan/phpstan" => '^2.0',
+                "phpunit/phpunit" => "^11.0",
             ],
             "autoload" => [
             ],

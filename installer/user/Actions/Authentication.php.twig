@@ -21,7 +21,7 @@ class Authentication
     }
 
     #[RuntimeCheck(new Not(new Requires('authenticated')))]
-    public function verifyAuthentication(UserId $username, string $password{% if config.enable2Fa -%}, ?OTP $otp{% endif %}): ?User
+    public function verifyAuthentication(string $username, string $password{% if config.enable2Fa -%}, ?OTP $otp{% endif %}): ?User
     {
         try {
             $user = $this->apie->find($username, new BoundedContextId('example'));

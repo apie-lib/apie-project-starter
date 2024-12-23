@@ -21,7 +21,7 @@ class LaravelSetup implements FrameworkSetupInterface
         $composerJson['keywords'][] = 'framework';
 
         $composerJson['require']['apie/laravel-apie'] = ProjectStarterCommand::APIE_VERSION_TO_INSTALL;
-        $composerJson['require']["laravel/framework"] = "^10.10";
+        $composerJson['require']["laravel/framework"] = "^11.0";
         $composerJson['require']['laravel/sanctum'] = '^3.2';
         $composerJson['require']['guzzlehttp/guzzle'] = '^7.2';
 
@@ -109,7 +109,7 @@ class LaravelSetup implements FrameworkSetupInterface
         try {
             $git = new Git;
             $repo = $git->cloneRepository($gitUrl, $path);
-            $repo->checkout('10.x');
+            $repo->checkout('11.x');
             foreach (Finder::create()->files()->in($path) as $file) {
                 $targetFile = $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename();
                 if (in_array($targetFile, self::IGNORE_LIST)) {
