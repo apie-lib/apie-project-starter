@@ -22,16 +22,16 @@ class LaravelSetup implements FrameworkSetupInterface
 
         $composerJson['require']['apie/laravel-apie'] = ProjectStarterCommand::APIE_VERSION_TO_INSTALL;
         $composerJson['require']["laravel/framework"] = "^11.0";
-        $composerJson['require']['laravel/sanctum'] = '^3.2';
+        $composerJson['require']['laravel/sanctum'] = '^4.1';
         $composerJson['require']['guzzlehttp/guzzle'] = '^7.2';
 
         $composerJson['autoload']['psr-4']["App\\"] = "app/";
         $composerJson['autoload']['psr-4']["Database\\Factories\\"] = "database/factories/";
         $composerJson['autoload']['psr-4']["Database\\Seeders\\"] = "database/seeders/";
 
-        $composerJson['require-dev']['nunomaduro/collision'] = "^7.0";
+        $composerJson['require-dev']['nunomaduro/collision'] = "^8.8";
         $composerJson['require-dev']['spatie/laravel-ignition'] = '^2.0';
-        $composerJson['require-dev']['nunomaduro/larastan'] = '^2.0';
+        $composerJson['require-dev']['larastan/larastan'] = '^3.4';
 
         $composerJson['scripts'] = [
             "post-autoload-dump" => [

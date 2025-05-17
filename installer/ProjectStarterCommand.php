@@ -18,7 +18,7 @@ class ProjectStarterCommand extends Command
 {
     public const APIE_VERSION_TO_INSTALL = '1.0.0.x-dev';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('start-project')
             ->setDescription('Start a new project with options')
@@ -78,7 +78,7 @@ class ProjectStarterCommand extends Command
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dotenv = new Dotenv();
         $dotenv->usePutenv(true);
