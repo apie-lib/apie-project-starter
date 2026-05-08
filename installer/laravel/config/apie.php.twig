@@ -1,8 +1,9 @@
 <?php
 
 use Apie\DoctrineEntityDatalayer\DoctrineEntityDatalayer;
+use Apie\LaravelApie\Config\ValidateAndSanitizeConfig;
 
-return [
+return ValidateAndSanitizeConfig::process([
     'cms' => [
         'base_url' => '/cms',
         'dashboard_template' => 'apie/dashboard',
@@ -31,4 +32,4 @@ return [
     'rest_api' => [
         'base_url' => '/api',
     ]
-];
+]);
