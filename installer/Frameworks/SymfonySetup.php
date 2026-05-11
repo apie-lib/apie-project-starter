@@ -69,18 +69,28 @@ class SymfonySetup implements FrameworkSetupInterface
     {
         $cachePath = $targetPath . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'setup';
         $examplePath = $targetPath . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Apie' . DIRECTORY_SEPARATOR . 'Example';
+        $additionalVariables = ['console_command' => 'bin/console'];
         $render = new TwigRender(
             __DIR__ . '/../symfony',
             $cachePath,
-            $projectStarterConfig
+            $projectStarterConfig,
+            $additionalVariables
         );
         $render->renderAll($targetPath);
         $render = new TwigRender(
             __DIR__ . '/../example',
             $cachePath,
-            $projectStarterConfig
+            $projectStarterConfig,
+            $additionalVariables
         );
         $render->renderAll($examplePath);
+        $render = new TwigRender(
+            __DIR__ . '/../ai',
+            $cachePath,
+            $projectStarterConfig,
+            $additionalVariables
+        );
+        $render->renderAll($targetPath);
         chmod($targetPath . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'console', 0744);
         if ($projectStarterConfig->includeCms) {
             $render = new TwigRender(

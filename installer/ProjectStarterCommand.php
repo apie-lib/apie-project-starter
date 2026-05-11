@@ -114,7 +114,7 @@ class ProjectStarterCommand extends Command
             ],
             "autoload-dev" => [
                 "psr-4" => [
-                    'App\Tests\\' =>  'tests/'
+                    'Tests\\' =>  'tests/'
                 ]
             ]
         ];

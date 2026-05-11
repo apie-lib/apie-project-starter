@@ -64,18 +64,22 @@ class LaravelSetup implements FrameworkSetupInterface
         $cachePath = $targetPath . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'setup';
         $examplePath = $targetPath . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Apie' . DIRECTORY_SEPARATOR . 'Example';
 
+        $additionalVariables = ['console_command' => 'artisan'];
+
         $this->getFileFromGit('https://github.com/laravel/laravel.git', $targetPath);
         $render = new TwigRender(
             __DIR__ . '/../laravel',
             $cachePath,
-            $projectStarterConfig
+            $projectStarterConfig,
+            $additionalVariables
         );
         $render->renderAll($targetPath);
         if ($projectStarterConfig->includeCms) {
             $render = new TwigRender(
                 __DIR__ . '/../laravel-cms',
                 $cachePath,
-                $projectStarterConfig
+                $projectStarterConfig,
+                $additionalVariables
             );
             $render->renderAll($targetPath);
         }
@@ -83,16 +87,26 @@ class LaravelSetup implements FrameworkSetupInterface
             $render = new TwigRender(
                 __DIR__ . '/../user',
                 $cachePath,
-                $projectStarterConfig
+                $projectStarterConfig,
+                $additionalVariables
             );
             $render->renderAll($examplePath);
         }
         $render = new TwigRender(
             __DIR__ . '/../example',
             $cachePath,
-            $projectStarterConfig
+            $projectStarterConfig,
+            $additionalVariables
         );
         $render->renderAll($examplePath);
+
+        $render = new TwigRender(
+            __DIR__ . '/../ai',
+            $cachePath,
+            $projectStarterConfig,
+            $additionalVariables
+        );
+        $render->renderAll($targetPath);
 
         @mkdir($targetPath . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'cache', recursive: true);
         file_put_contents(
@@ -109,7 +123,7 @@ class LaravelSetup implements FrameworkSetupInterface
         try {
             $git = new Git;
             $repo = $git->cloneRepository($gitUrl, $path);
-            $repo->checkout('11.x');
+            $repo->checkout('13.x');
             foreach (Finder::create()->files()->in($path) as $file) {
                 $targetFile = $file->getRelativePath() . DIRECTORY_SEPARATOR . $file->getBasename();
                 if (in_array($targetFile, self::IGNORE_LIST)) {

@@ -16,7 +16,8 @@ final class TwigRender
     public function __construct(
         private readonly string $templatePath,
         private readonly string $cachePath,
-        private readonly ProjectStarterConfig $projectStarterConfig
+        private readonly ProjectStarterConfig $projectStarterConfig,
+        private readonly array $additionalVariables = []
     ) {
         $loader = new FilesystemLoader($this->templatePath);
         $this->twig = new Environment($loader, [
@@ -34,10 +35,13 @@ final class TwigRender
                 $targetFile,
                 $this->twig->render(
                     $templateFile . '.twig',
-                    [
-                        'apieVersion' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
-                        'config' => $this->projectStarterConfig,
-                    ]
+                    array_merge(
+                        [
+                            'apieVersion' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
+                            'config' => $this->projectStarterConfig,
+                        ],
+                        $this->additionalVariables
+                    )
                 )
             );
         }
