@@ -15,3 +15,6 @@ use App\Http\Controllers\RootController;
 */
 
 Route::get('/', RootController::class);
+Route::get('/logout', function () {
+    \Auth::logout();
+});

@@ -242,7 +242,7 @@ There are 2 default attributes: RuntimeCheck and StaticCheck. With a RuntimeChec
 If you put the attribute on the class it will apply to all operations.
 If you put the attritute on a setter it will apply to setting the value.
 If you put the attribute on the constructor it will apply to creating the object.
-If you put the attrbute on a method action of the domain object it will do the check when calling this method.
+If you put the attribute on a method action of the domain object it will do the check when calling this method.
 If there are setters or public properties but you are not allowed to set any of these values you will get an access denied operation.
 
 For example this is a way I can make admin users only from the console. The API url is not even being generated if StaticCheck fails.
