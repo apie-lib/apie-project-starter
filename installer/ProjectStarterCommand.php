@@ -160,8 +160,13 @@ class ProjectStarterCommand extends Command
         $projectConfig = new ProjectStarterConfig($setup, $framework, $cms, $userObject, $enable2Fa ?? false);
 
         $frameworkSetup = $this->getFrameworkSetup($projectConfig);
-        $composerJson['require']['apie/meta-' . $setup] = self::APIE_VERSION_TO_INSTALL;
+        $metaSetup = $setup === 'preferred' ? 'recommended' : $setup;
+        $composerJson['require']['apie/meta-' . $metaSetup] = self::APIE_VERSION_TO_INSTALL;
+        $composerJson['require']['apie/doctrine-entity-datalayer'] = self::APIE_VERSION_TO_INSTALL;
         $composerJson = $frameworkSetup->modifyComposerFileContents($composerJson, $projectConfig);
+        if ($userObject) {
+            $composerJson['require']['apie/common-value-objects'] = self::APIE_VERSION_TO_INSTALL;
+        }
         if ($enable2Fa) {
             $composerJson['require']['apie/otp-value-objects'] = self::APIE_VERSION_TO_INSTALL;
         }

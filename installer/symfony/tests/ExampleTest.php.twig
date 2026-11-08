@@ -1,12 +1,22 @@
 <?php
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class ExampleTest extends TestCase
+class ExampleTest extends KernelTestCase
 {
-    public function testExample(): void
+    public function testHomePageRedirectsToGeneratedApiePage(): void
     {
-        $this->assertEquals(2, 1 + 1);
+        self::bootKernel();
+        $httpKernel = self::getContainer()->get('http_kernel');
+        self::assertInstanceOf(HttpKernelInterface::class, $httpKernel);
+
+        $response = $httpKernel->handle(Request::create('/'));
+
+        self::assertSame(302, $response->getStatusCode());
+        self::assertNotEmpty($response->headers->get('Location'));
     }
+
 }

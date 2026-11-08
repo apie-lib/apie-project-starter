@@ -18,18 +18,35 @@ jobs:
       matrix:
         php-version: ['8.4', '8.5']
         framework: [Laravel, Symfony]
-        setup: [minimal, preferred, maximum]
+        setup:
+          - name: minimum
+            value: minimal
+          - name: standard
+            value: preferred
+          - name: full
+            value: maximum
+    name: ${{ matrix.framework }} / PHP ${{ matrix.php-version }} / ${{ matrix.setup.name }}
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
+          extensions: pdo_sqlite
+      - name: Use the checked-out revision for project generation
+        run: |
+          sed -i "s/\"reference\": \"main\"/\"reference\": \"$(git rev-parse HEAD)\"/" packages.json
       - name: Generate project
         run: make test-project
         env:
-          APIE_STARTER_SETUP: ${{ matrix.setup }}
+          APIE_STARTER_SETUP: ${{ matrix.setup.value }}
           APIE_STARTER_ENABLE_CMS: 'true'
           APIE_STARTER_FRAMEWORK: ${{ matrix.framework }}
           APIE_STARTER_ENABLE_USER: 'true'
           APIE_STARTER_ENABLE_2FA: 'false'
+      - name: Run generated Symfony application tests
+        if: matrix.framework == 'Symfony'
+        run: cd test-project && php bin/phpunit
+      - name: Run generated Laravel application tests
+        if: matrix.framework == 'Laravel'
+        run: cd test-project && php artisan test

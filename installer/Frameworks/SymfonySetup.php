@@ -11,6 +11,8 @@ class SymfonySetup implements FrameworkSetupInterface
     private const REQUIREMENTS = [
         'apie/apie-bundle' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
         "doctrine/doctrine-bundle" => "^2.10",
+        "doctrine/orm" => "^3.3",
+        "symfony/var-exporter" => "^7.4",
         "symfony/console" => "6.*|7.*|8.*",
         'symfony/framework-bundle' => '6.*|7.*|8.*',
         'symfony/runtime' => '6.*|7.*|8.*',
@@ -77,6 +79,9 @@ class SymfonySetup implements FrameworkSetupInterface
             $additionalVariables
         );
         $render->renderAll($targetPath);
+        if ($projectStarterConfig->setup === 'minimal') {
+            unlink($targetPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'security.yaml');
+        }
         $render = new TwigRender(
             __DIR__ . '/../example',
             $cachePath,
