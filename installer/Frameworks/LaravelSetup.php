@@ -21,7 +21,7 @@ class LaravelSetup implements FrameworkSetupInterface
         $composerJson['keywords'][] = 'framework';
 
         $composerJson['require']['apie/laravel-apie'] = ProjectStarterCommand::APIE_VERSION_TO_INSTALL;
-        $composerJson['require']["laravel/framework"] = "^11.0";
+        $composerJson['require']["laravel/framework"] = "^13.0";
         $composerJson['require']['laravel/sanctum'] = '^4.1';
         $composerJson['require']['guzzlehttp/guzzle'] = '^7.2';
 

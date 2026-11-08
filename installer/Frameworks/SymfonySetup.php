@@ -11,28 +11,28 @@ class SymfonySetup implements FrameworkSetupInterface
     private const REQUIREMENTS = [
         'apie/apie-bundle' => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
         "doctrine/doctrine-bundle" => "^2.10",
-        "symfony/console" => "6.*|7.*",
-        'symfony/framework-bundle' => '6.*|7.*',
-        'symfony/runtime' => '6.*|7.*',
-        "symfony/dotenv" => "6.*|7.*",
+        "symfony/console" => "6.*|7.*|8.*",
+        'symfony/framework-bundle' => '6.*|7.*|8.*',
+        'symfony/runtime' => '6.*|7.*|8.*',
+        "symfony/dotenv" => "6.*|7.*|8.*",
         "symfony/flex" => "^2",
-        "symfony/yaml" => "6.1.*|7.*",
+        "symfony/yaml" => "6.1.*|7.*|8.*",
     ];
 
     private const RECOMMENDED_REQUIREMENTS = [
-        'symfony/security-bundle' => '6.*|7.*',
+        'symfony/security-bundle' => '6.*|7.*|8.*',
     ];
 
     private const CMS_REQUIREMENTS = [
         "apie/cms-layout-graphite" => ProjectStarterCommand::APIE_VERSION_TO_INSTALL,
-        'symfony/twig-bundle' => '6.*|7.*',
+        'symfony/twig-bundle' => '6.*|7.*|8.*',
     ];
 
     private const DEV_REQUIREMENTS = [
-        "symfony/debug-bundle" => "6.*|7.*",
-        "symfony/monolog-bundle" => "^3.0|7.*",
-        "symfony/stopwatch" => "6.*|7.*",
-        "symfony/web-profiler-bundle" => "6.*|7.*"
+        "symfony/debug-bundle" => "6.*|7.*|8.*",
+        "symfony/monolog-bundle" => "^3.0|7.*|8.*",
+        "symfony/stopwatch" => "6.*|7.*|8.*",
+        "symfony/web-profiler-bundle" => "6.*|7.*|8.*"
     ];
 
     public function modifyComposerFileContents(array $composerJson, ProjectStarterConfig $projectStarterConfig): array
