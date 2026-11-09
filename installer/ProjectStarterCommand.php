@@ -106,6 +106,8 @@ class ProjectStarterCommand extends Command
             "prefer-stable" => true,
             "require" => [],
             "require-dev" => [
+                "apie/fixtures" => self::APIE_VERSION_TO_INSTALL,
+                "apie/faker" => self::APIE_VERSION_TO_INSTALL,
                 "apie/apie-phpstan-rules" => self::APIE_VERSION_TO_INSTALL,
                 "phpstan/phpstan" => '^2.0',
                 "phpunit/phpunit" => "^11.0",

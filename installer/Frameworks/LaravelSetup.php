@@ -107,6 +107,21 @@ class LaravelSetup implements FrameworkSetupInterface
             $additionalVariables
         );
         $render->renderAll($targetPath);
+        $render = new TwigRender(
+            __DIR__ . '/../tests',
+            $cachePath,
+            $projectStarterConfig,
+            $additionalVariables
+        );
+        $render->renderAll($targetPath . DIRECTORY_SEPARATOR . 'tests');
+        if ($projectStarterConfig->includeUser) {
+            $render = new TwigRender(
+                __DIR__ . '/../tests-user',
+                $cachePath,
+                $projectStarterConfig
+            );
+            $render->renderAll($targetPath . DIRECTORY_SEPARATOR . 'tests');
+        }
 
         @mkdir($targetPath . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'cache', recursive: true);
         file_put_contents(

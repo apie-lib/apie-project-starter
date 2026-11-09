@@ -1,0 +1,31 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\Fixtures\TestHelpers\ObjectTestCase;
+use App\Apie\Example\Dtos\DtoExample;
+
+class DtoExampleObjectTest extends ObjectTestCase
+{
+    public static function className(): string
+    {
+        return DtoExample::class;
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['description', 'name'],
+            'properties' => [
+                'description' => ['$ref' => '#/components/schemas/DatabaseText-post'],
+                'name' => {% if config.setup == 'minimal' %}['type' => 'string', 'nullable' => false]{% else %}['$ref' => '#/components/schemas/FullName-post']{% endif %},
+            ],
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+}

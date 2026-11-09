@@ -1,0 +1,32 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\Fixtures\TestHelpers\ValueObjectTestCase;
+use App\Apie\Example\Identifiers\UserId;
+
+class UserIdObjectTest extends ValueObjectTestCase
+{
+    public static function className(): string
+    {
+        return UserId::class;
+    }
+
+    public static function provideFromNative(): array
+    {
+        return ['valid email address' => ['user@example.com', 'user@example.com']];
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'string',
+            'format' => 'userid',
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+}

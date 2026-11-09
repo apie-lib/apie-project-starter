@@ -1,0 +1,39 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\Fixtures\TestHelpers\ObjectTestCase;
+use App\Apie\Example\Dtos\ApplicationInfo;
+
+class ApplicationInfoObjectTest extends ObjectTestCase
+{
+    public static function className(): string
+    {
+        return ApplicationInfo::class;
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['serverName'],
+            'properties' => [
+                'apieVersion' => ['type' => 'string', 'nullable' => false],
+                'serverName' => ['type' => 'string', 'nullable' => false],
+            ],
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+
+    public function testApplicationInfoExposesTheApieVersionAndServerName(): void
+    {
+        $applicationInfo = new ApplicationInfo();
+
+        self::assertSame(\Apie\Core\ApieLib::VERSION, $applicationInfo->apieVersion);
+        self::assertNotSame('', $applicationInfo->serverName);
+    }
+}

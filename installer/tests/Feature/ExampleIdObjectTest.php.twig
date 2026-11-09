@@ -1,0 +1,35 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\Fixtures\TestHelpers\ValueObjectTestCase;
+use App\Apie\Example\Identifiers\ExampleId;
+
+class ExampleIdObjectTest extends ValueObjectTestCase
+{
+    public static function className(): string
+    {
+        return ExampleId::class;
+    }
+
+    public static function provideFromNative(): array
+    {
+        $uuid = '123e4567-e89b-42d3-a456-426614174000';
+
+        return ['valid UUID' => [$uuid, $uuid]];
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'string',
+            'format' => 'exampleid',
+            'pattern' => true,
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+}

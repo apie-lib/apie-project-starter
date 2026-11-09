@@ -96,6 +96,21 @@ class SymfonySetup implements FrameworkSetupInterface
             $additionalVariables
         );
         $render->renderAll($targetPath);
+        $render = new TwigRender(
+            __DIR__ . '/../tests',
+            $cachePath,
+            $projectStarterConfig,
+            $additionalVariables
+        );
+        $render->renderAll($targetPath . DIRECTORY_SEPARATOR . 'tests');
+        if ($projectStarterConfig->includeUser) {
+            $render = new TwigRender(
+                __DIR__ . '/../tests-user',
+                $cachePath,
+                $projectStarterConfig
+            );
+            $render->renderAll($targetPath . DIRECTORY_SEPARATOR . 'tests');
+        }
         chmod($targetPath . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'console', 0744);
         if ($projectStarterConfig->includeCms) {
             $render = new TwigRender(

@@ -1,0 +1,39 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\Fixtures\TestHelpers\ObjectTestCase;
+use App\Apie\Example\Resources\Example;
+
+class ExampleObjectTest extends ObjectTestCase
+{
+    public static function className(): string
+    {
+        return Example::class;
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['dtoExample', 'requiredString'],
+            'properties' => [
+                'dtoExample' => ['$ref' => '#/components/schemas/DtoExample-post'],
+                'requiredString' => ['type' => 'string', 'nullable' => false],
+            ],
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+
+    public function testExampleKeepsItsRequiredValueAndHasAnIdentifier(): void
+    {
+        $example = new Example('test value');
+
+        self::assertSame('test value', $example->getRequiredString());
+        self::assertNotEmpty($example->getId()->toNative());
+    }
+}

@@ -1,0 +1,66 @@
+<?php
+
+namespace Tests\Feature;
+
+use Apie\CommonValueObjects\Email;
+use Apie\Core\ValueObjects\DatabaseText;
+use Apie\Fixtures\TestHelpers\ObjectTestCase;
+use Apie\TextValueObjects\StrongPassword;
+use App\Apie\Example\Resources\User;
+
+class UserObjectTest extends ObjectTestCase
+{
+    public static function className(): string
+    {
+        return User::class;
+    }
+
+    public static function getOpenApiSchemaForCreation(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['email', 'password'],
+            'properties' => [
+                'email' => ['$ref' => '#/components/schemas/Email-post'],
+                'password' => ['$ref' => '#/components/schemas/StrongPassword-post'],
+            ],
+        ];
+    }
+
+    protected static function testCount(): int
+    {
+        return 5;
+    }
+
+    public function testPasswordVerificationAndBlockedState(): void
+    {
+        $password = StrongPassword::fromNative('A-Strong-Password-2026!');
+        $user = new User(Email::fromNative('test@example.com'), $password);
+
+        self::assertTrue($user->verifyPassword($password->toNative(){% if config.enable2Fa %}, null{% endif %}));
+        self::assertFalse($user->verifyPassword('incorrect password'{% if config.enable2Fa %}, null{% endif %}));
+        self::assertFalse($user->isDisabled());
+
+        $user->block(DatabaseText::fromNative('blocked for testing'));
+
+        self::assertTrue($user->isDisabled());
+        self::assertSame('blocked for testing', $user->getBlockedReason()->toNative());
+
+        $this->expectException(\Apie\Serializer\Exceptions\ValidationException::class);
+        $user->verifyPassword($password->toNative(){% if config.enable2Fa %}, null{% endif %});
+    }
+
+    public function testUserCanBeUnblocked(): void
+    {
+        $user = new User(
+            Email::fromNative('test@example.com'),
+            StrongPassword::fromNative('A-Strong-Password-2026!')
+        );
+        $user->block(DatabaseText::fromNative('blocked for testing'));
+
+        $user->unblock();
+
+        self::assertFalse($user->isDisabled());
+        self::assertNull($user->getBlockedReason());
+    }
+}
